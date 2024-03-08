@@ -31,10 +31,10 @@ app.get('/blogs/:id', async (req, res) => {
 })
 
 app.post('/blogs', async (req, res) => {
-  const { title, content } = req.body
+  const { title, content, image64 } = req.body
 
   try {
-    const result = await createBlog(title, content)
+    const result = await createBlog(title, content, image64)
     res.json(result)
   } catch (error) {
     res.status(error.status || 500).json({ message: error.message })
@@ -69,5 +69,4 @@ app.all('/blogs', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`)
 })
