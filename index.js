@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllBlogs, getBlog  ,createBlog, deleteBlog, editBlog} from './db.js'
+import { getAllBlogs, getBlog  ,createBlog, deleteBlog, editBlog, notImplemented} from './db.js'
 
 
 
@@ -11,46 +11,66 @@ const port = 3000
 app.use(express.json())
 
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
 app.get('/blogs', async (req, res) => {
-  const blogs = await getAllBlogs()
-  res.json(blogs)
-})
+  try {
+      const blogs = await getAllBlogs();
+      res.json(blogs);
+  } catch (error) {
+      res.status(error.status || 500).json({ message: error.message });
+  }
+});
 
-app.get('/blogs/:id', async(request, response)=>{
-  console.log('delete blog');
-  const id = request.params.id
-  console.log(id);
-  const result = await getBlog(id)
-  response.json(result)
-})
+app.get('/blogs/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+      const blog = await getBlog(id);
+      res.json(blog);
+  } catch (error) {
+      res.status(error.status || 500).json({ message: error.message });
+  }
+});
 
 app.post('/blogs', async (req, res) => {
-  const [title, content] = [req.body.title, req.body.content]
-  console.log(title, content);
-  const blogs = await createBlog(title, content)
-  res.json(blogs)
-})
+  const { title, content } = req.body;
+
+  try {
+      const result = await createBlog(title, content);
+      res.json(result);
+  } catch (error) {
+      res.status(error.status || 500).json({ message: error.message });
+  }
+});
 
 app.put('/blogs/:id', async (req, res) => {
-  const id = req.params.id
-  const [title, content] = [req.body.title, req.body.content]
-  const result = await editBlog(id, title, content)
-  res.json(result)
-})
+  const id = req.params.id;
+  const { newTitle, newContent } = req.body;
 
+  try {
+      const result = await editBlog(id, newTitle, newContent);
+      res.json(result);
+  } catch (error) {
+      res.status(error.status || 500).json({ message: error.message });
+  }
+});
 
-app.delete('/blogs/:id', async(request, response)=>{
-  console.log('delete blog');
-  const id = request.params.id
-  console.log(id);
-  const result = await deleteBlog(id)
-  response.json(result)
-})
+app.delete('/blogs/:id', async (req, res) => {
+  const id = req.params.id;
 
+  try {
+      const result = await deleteBlog(id);
+      res.json(result);
+  } catch (error) {
+      res.status(error.status || 500).json({ message: error.message });
+  }
+});
+
+// Manejar métodos no implementados
+app.all('/blogs', (req, res) => {
+  notImplemented();
+});
+
+// Escuchar en el puerto
 app.listen(port, () => {
-    console.log(`Server listening at http://127.0.0.1:${port}`)
-  })
+  console.log(`Server is running on http://localhost:${port}`);
+});
