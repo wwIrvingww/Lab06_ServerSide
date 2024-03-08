@@ -14,6 +14,7 @@ export async function getAllBlogs() {
 export async function createBlog(title, content) {
     try {
         const [result] = await conn.query(`INSERT INTO blogs (title, content) VALUES ('${title}', '${content}')`)
+        console.log(title, content)
         return result
 
     } catch (e) {
@@ -21,6 +22,19 @@ export async function createBlog(title, content) {
         return e
     }
 }
+
+export async function editBlog(id, newTitle, newContent) {
+    try {
+        const [result] = await conn.query(`UPDATE blogs SET title = '${newTitle}', content = '${newContent}' WHERE id = ${id}`);
+        return result
+        // Retorna un objeto con información sobre la operación (por ejemplo, éxito o error).
+        // return { success: true, message: 'Blog actualizado correctamente' };
+    } catch (e) {
+        console.error(e);
+        return {e};
+    }
+}
+
 
 
 export async function deleteBlog(id) {
