@@ -1,10 +1,12 @@
 {
+  "type": "module",
   "name": "lab06_serverside",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon node index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,10 @@
   },
   "homepage": "https://github.com/wwIrvingww/Lab06_ServerSide#readme",
   "dependencies": {
-    "express": "^4.18.3"
+    "express": "^4.18.3",
+    "moongose": "^1.0.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.9.2",
+    "nodemon": "^3.1.0"
   }
 }
