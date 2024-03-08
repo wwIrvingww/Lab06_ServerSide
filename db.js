@@ -11,6 +11,18 @@ export async function getAllBlogs() {
     }
 }
 
+
+export async function getBlog(id) {
+    try {
+        const [result] = await conn.query(`SELECT * FROM blogs WHERE id = ${id}`)
+        return result
+
+    } catch (e) {
+        console.log(e)
+        return e
+    }
+}
+
 export async function createBlog(title, content) {
     try {
         const [result] = await conn.query(`INSERT INTO blogs (title, content) VALUES ('${title}', '${content}')`)

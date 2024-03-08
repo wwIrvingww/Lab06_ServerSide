@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllBlogs, createBlog, deleteBlog, editBlog} from './db.js'
+import { getAllBlogs, getBlog  ,createBlog, deleteBlog, editBlog} from './db.js'
 
 
 
@@ -18,6 +18,14 @@ app.get('/', (req, res) => {
 app.get('/blogs', async (req, res) => {
   const blogs = await getAllBlogs()
   res.json(blogs)
+})
+
+app.get('/blogs/:id', async(request, response)=>{
+  console.log('delete blog');
+  const id = request.params.id
+  console.log(id);
+  const result = await getBlog(id)
+  response.json(result)
 })
 
 app.post('/blogs', async (req, res) => {
