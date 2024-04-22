@@ -31,7 +31,7 @@ export async function createBlog(title, content, image64) {
       throw new Error('Bad Request: Title and content are required.')
     }
 
-    const [result] = await conn.query(`INSERT INTO blogs (title, content, image64) VALUES ('${title}', '${content}', '${image64}')`)
+    const [result] = await conn.query(`INSERT INTO blogs (title, content, image64, date) VALUES ('${title}', '${content}', '${image64}')`)
     return result
   } catch (e) {
     if (e.status) {
@@ -42,13 +42,17 @@ export async function createBlog(title, content, image64) {
   }
 }
 
-export async function editBlog(id, newTitle, newContent) {
+export async function editBlog(id, newTitle, newContent, newImage) {
+  console.log (id, newTitle, newContent, newImage);
+
   try {
     if (!newTitle || !newContent) {
       throw new Error('Bad Request: New title and content are required.')
     }
 
-    const [result] = await conn.query(`UPDATE blogs SET title = '${newTitle}', content = '${newContent}' WHERE id = ${id}`)
+    console.log (id, newTitle, newContent, newImage);
+    const [result] = await conn.query(`UPDATE blogs SET title = '${newTitle}', content = '${newContent}', image64 = '${newImage}' WHERE id = ${id}`);
+
     if (result.affectedRows === 0) {
       throw new Error('Bad Request: Blog not found.')
     }
