@@ -31,16 +31,20 @@ export async function createBlog(title, content, image64) {
       throw new Error('Bad Request: Title and content are required.')
     }
 
-    const [result] = await conn.query(`INSERT INTO blogs (title, content, image64, date) VALUES ('${title}', '${content}', '${image64}')`)
-    return result
+    const query = 'INSERT INTO blogs (title, content, image64) VALUES (?, ?, ?)';
+    const [result] = await conn.query(query, [title, content, image64]);
+    return result;
   } catch (e) {
+    console.error('FUNCTION createBlog in CATCH', e)
     if (e.status) {
-      throw e
+      throw e;
     } else {
-      throw new Error('Error contacting the database or a code error occurred.')
+      
+      throw new Error('Error contacting the database or a code error occurred.');
     }
   }
 }
+
 
 export async function editBlog(id, newTitle, newContent, newImage) {
   console.log (id, newTitle, newContent, newImage);
@@ -81,6 +85,24 @@ export async function deleteBlog(id) {
     }
   }
 }
+
+export async function login(user, password) {
+  try {
+    const [result] = await conn.query(`SELECT * FROM Usuarios WHERE user = ? AND password = ?`, [user, password]);
+    
+    if (!result || result.length == 0) {
+      throw new Error('Unauthorized: Invalid username or password.');
+      console.log(result);
+    }
+
+    return result;
+    
+  } catch (e) {
+    throw new Error('Error contacting the database or a code error occurred.', e);
+  }
+}
+
+
 
 export function notImplemented() {
   throw new Error('Not Implemented: This HTTP method is not supported.')
