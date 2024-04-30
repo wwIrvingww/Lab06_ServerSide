@@ -2,8 +2,8 @@ import conn from './connection.js'
 
 export async function getAllBlogs() {
   try {
-    const [rows] = await conn.query('SELECT * FROM blogs')
-    return rows
+    const rows = await conn.query('SELECT * FROM blogs')
+    return rows.rows
   } catch (e) {
     throw new Error('Error contacting the database or a code error occurred.')
   }
