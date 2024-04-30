@@ -19,9 +19,9 @@ const { Client } = pg
 const connectionData = {
 
   user: process.env.db_user,
-  host: 'localhost', //SUSTITUIR EL RESTO DE VARIABLES DE ENTORNO
-  database: 'blog_db',
-  password: '01.2024',
+  host: process.env.db_host, //SUSTITUIR EL RESTO DE VARIABLES DE ENTORNO
+  database: process.env.db_database,
+  password: process.env.db_password,
   port: 5432,
 
 }
