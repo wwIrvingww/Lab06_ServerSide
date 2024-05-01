@@ -35,14 +35,16 @@ app.get('/blogs/:id', async (req, res) => {
     const blog = await getBlog(id)
     res.json(blog)
   } catch (error) {
-    res.status(error.status || 500).json({ message: error.message })
+    res.status(error.status || 500).json({ message: error.message})
+    console.log('Error en la API', error)
   }
 })
 
 app.post('/blogs', async (req, res) => {
   console.log(`[REQUEST] /blogs { ${JSON.stringify(req.body)} }`)
-  const { title, content, image64 } = req.body
+  console.log('BODY', req.body)
 
+  const { title, content, image64 } = req.body
   try {
     const result = await createBlog(title, content, image64)
     console.log(`[RESPONSE] /blogs { ${JSON.stringify(result)} }`)

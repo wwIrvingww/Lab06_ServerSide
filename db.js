@@ -11,19 +11,22 @@ export async function getAllBlogs() {
 
 export async function getBlog(id) {
   try {
-    const [result] = await conn.query(`SELECT * FROM blogs WHERE id = ${id}`)
-    if (!result) {
-      throw new Error('Bad Request: Blog not found.')
+    const result = await conn.query('SELECT * FROM blogs WHERE id = $1', [id]);
+    console.log(result.rows);
+    if (result.rows.length === 0) {
+      console.log('Blog not found')
+      throw new Error('Bad Request: Blog not found.');
     }
-    return result
+    return result.rows;
   } catch (e) {
     if (e.status) {
-      throw e
+      throw e;
     } else {
-      throw new Error('Error contacting the database or a code error occurred.')
+      throw new Error('Error contacting the database or a code error occurred.', e);
     }
   }
 }
+
 
 export async function createBlog(title, content, image64) {
   try {
@@ -31,20 +34,18 @@ export async function createBlog(title, content, image64) {
       throw new Error('Bad Request: Title and content are required.')
     }
 
-    const query = 'INSERT INTO blogs (title, content, image64) VALUES (?, ?, ?)';
-    const [result] = await conn.query(query, [title, content, image64]);
-    return result;
+    const query = 'INSERT INTO blogs (title, content, image64) VALUES ($1, $2, $3)';
+    const result = await conn.query(query, [title, content, image64]);
+    return result.rows[0];
   } catch (e) {
     console.error('FUNCTION createBlog in CATCH', e)
     if (e.status) {
       throw e;
     } else {
-      
       throw new Error('Error contacting the database or a code error occurred.');
     }
   }
 }
-
 
 export async function editBlog(id, newTitle, newContent, newImage) {
   console.log (id, newTitle, newContent, newImage);
