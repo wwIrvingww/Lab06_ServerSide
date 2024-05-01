@@ -85,10 +85,10 @@ app.put('/blogs/:id', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-  const { user, password } = req.body
+  const { username, password } = req.body
 
   try {
-    const result = await login(user, password)
+    const result = await login(username, password)
     res.json(result)
     console.log(result)
   } catch (error) {

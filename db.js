@@ -48,60 +48,62 @@ export async function createBlog(title, content, image64) {
 }
 
 export async function editBlog(id, newTitle, newContent, newImage) {
-  console.log (id, newTitle, newContent, newImage);
-
   try {
     if (!newTitle || !newContent) {
-      throw new Error('Bad Request: New title and content are required.')
+      throw new Error('Bad Request: New title and content are required.');
     }
 
-    console.log (id, newTitle, newContent, newImage);
-    const [result] = await conn.query(`UPDATE blogs SET title = '${newTitle}', content = '${newContent}', image64 = '${newImage}' WHERE id = ${id}`);
+    const query = 'UPDATE blogs SET title = $1, content = $2, image64 = $3 WHERE id = $4 RETURNING *';
+    const result = await conn.query(query, [newTitle, newContent, newImage, id]);
 
-    if (result.affectedRows === 0) {
-      throw new Error('Bad Request: Blog not found.')
+    if (result.rows.length === 0) {
+      throw new Error('Bad Request: Blog not found.');
     }
-    return result
+    return result.rows[0];
   } catch (e) {
     if (e.status) {
-      throw e
+      throw e;
     } else {
-      throw new Error('Error contacting the database or a code error occurred.')
+      throw new Error('Error contacting the database or a code error occurred.');
     }
   }
 }
+
 
 export async function deleteBlog(id) {
   try {
-    const [result] = await conn.query(`DELETE FROM blogs WHERE id = ${id}`)
-    if (result.affectedRows === 0) {
-      throw new Error('Bad Request: Blog not found.')
+    const query = 'DELETE FROM blogs WHERE id = $1 RETURNING *';
+    const result = await conn.query(query, [id]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Bad Request: Blog not found.');
     }
-    return result
+    return result.rows[0];
   } catch (e) {
     if (e.status) {
-      throw e
+      throw e;
     } else {
-      throw new Error('Error contacting the database or a code error occurred.')
+      throw new Error('Error contacting the database or a code error occurred.');
     }
   }
 }
 
-export async function login(user, password) {
+
+export async function login(username, password) {
   try {
-    const [result] = await conn.query(`SELECT * FROM Usuarios WHERE user = ? AND password = ?`, [user, password]);
-    
-    if (!result || result.length == 0) {
+    const query = 'SELECT * FROM Usuarios WHERE username = $1 AND password = $2';
+    const result = await conn.query(query, [username, password]);
+
+    if (!result.rows || result.rows.length === 0) {
       throw new Error('Unauthorized: Invalid username or password.');
-      console.log(result);
     }
 
-    return result;
-    
+    return result.rows;
   } catch (e) {
     throw new Error('Error contacting the database or a code error occurred.', e);
   }
 }
+
 
 
 
